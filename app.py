@@ -118,3 +118,58 @@ st.subheader("Gráfico de Comparação: Vinicius Junior vs Rodri, na temporada 2
 st.pyplot(temp_23_24)
 st.write("Aqui vemos que o Vinícius foi superior em Gols e Rodri foi superior nas assistências.")
 st.write("Vinícius Júnior foi mais substituido do que o Rodri, o que pode nos dizer que talvez o vinícius seja mais irregular durante as partidas, do que o Rodri. Porém, pode ter outros significados, o Real Madrid tem um plantel ofensivo muito forte, logo uma substituição pode não estar diretamente relacionada à má desempenho.")
+st.write("Agora, iremos avaliar as métricas de cada um na competição UEFA Champions League, que a maior competição de clubes do mundo.")
+
+# Encontra o ID da competição da UEFA Champions League
+champions_linha = competitions_df.competition_code.apply(lambda name: name == 'uefa-champions-league')
+champions_id = competitions_df[champions_linha]['competition_id'].values[0]
+
+# Filtra as aparições de cada jogador na Champions League
+appearances_vini_CL = appearances_df[(appearances_df["player_id"] == id_vinicius) &
+                                (appearances_df["date"] >= start_date) &
+                                (appearances_df["date"] <= end_date) &
+                                (appearances_df["competition_id"] == champions_id)]
+
+appearances_rodri_CL = appearances_df[(appearances_df["player_id"] == id_rodri) &
+                                (appearances_df["date"] >= start_date) &
+                                (appearances_df["date"] <= end_date) &
+                                (appearances_df["competition_id"] == champions_id)]
+
+# Calcula as métricas de cada jogador na Champions League
+minutos_vini_CL = appearances_vini_CL['minutes_played'].sum()
+minutos_rodri_CL = appearances_rodri_CL['minutes_played'].sum()
+gols_vini_CL = appearances_vini_CL['goals'].sum()
+gols_rodri_CL = appearances_rodri_CL['goals'].sum()
+assists_vini_CL = appearances_vini_CL['assists'].sum()
+assists_rodri_CL = appearances_rodri_CL['assists'].sum()
+
+# Soma os gols e assistências para participação em gols
+participacao_gol_rodri_CL = gols_rodri_CL + assists_rodri_CL
+participacao_gol_vini_CL = gols_vini_CL + assists_vini_CL
+
+# Calcula minutos por gol e por participação em gol
+minutos_para_marcar_vini_CL = minutos_vini_CL / gols_vini_CL
+minutos_para_marcar_rodri_CL = minutos_rodri_CL / gols_rodri_CL
+minutos_para_participar_gol_vini_CL = minutos_vini_CL / participacao_gol_vini_CL
+minutos_para_participar_gol_rodri_CL = minutos_rodri_CL / participacao_gol_rodri_CL
+
+# Cria um DataFrame para as métricas de eficiência
+df_eficiencia_CL = pd.DataFrame({
+    'Jogador': ['Vinicius Junior', 'Rodri'],
+    'Minutos por Gol': [minutos_para_marcar_vini_CL, minutos_para_marcar_rodri_CL],
+    'Minutos por Participação em Gol': [minutos_para_participar_gol_vini_CL, minutos_para_participar_gol_rodri_CL]
+}).melt(id_vars='Jogador', var_name='Métrica', value_name='Minutos')
+
+st.title("Análise de Eficiência na Champions League")
+
+ucl, ax = plt.subplots(figsize=(10, 6))
+sns.barplot(data=df_eficiencia_CL, x='Jogador', y='Minutos', hue='Métrica', ax=ax)
+ax.set_title('Eficiência de Vinicius Jr. e Rodri (Gols e Participações) na Champions League')
+ax.set_ylabel('Minutos')
+ax.set_xlabel('Jogador')
+ax.legend(title='Métrica')
+
+# Exibir o gráfico no Streamlit
+st.pyplot(ucl)
+st.write("Apesar de estarmos tratando de um atacante e um meio campista, o natural seria que o atacante tivesse mais gols, e é realmente o que acontece. Porém, vemos que o vinícius júnior leve pouquissimo tempo para marcar um gol ou ajudar com um assitência, se comparado ao Rodri.")
+st.write("Quando falamos de futebol, é errado dizer que só contribui para o gol quem fez o gol ou deu assistência, porém como não temos dados além disso, como passes que criram uma oportunidade de gol ou algo nesse sentido, podemos dizer que o vinícius júnior foi muito mais efetivo do que o Rodri, tanto que o Real Madrid ganhou a edição da UCL 23-24.")
