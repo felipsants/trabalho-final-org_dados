@@ -153,6 +153,12 @@ minutos_para_marcar_rodri_CL = minutos_rodri_CL / gols_rodri_CL
 minutos_para_participar_gol_vini_CL = minutos_vini_CL / participacao_gol_vini_CL
 minutos_para_participar_gol_rodri_CL = minutos_rodri_CL / participacao_gol_rodri_CL
 
+df_metricas_ucl = pd.DataFrame({
+    'Jogador':['Vinicius Junior', 'Rodri'],
+    'Gols':[gols_vini_CL,gols_rodri_CL],
+    'Assistências':[assists_vini_CL,assists_rodri_CL]
+})
+
 # Cria um DataFrame para as métricas de eficiência
 df_eficiencia_CL = pd.DataFrame({
     'Jogador': ['Vinicius Junior', 'Rodri'],
@@ -169,7 +175,17 @@ ax.set_ylabel('Minutos')
 ax.set_xlabel('Jogador')
 ax.legend(title='Métrica')
 
-# Exibir o gráfico no Streamlit
+
+# Envolvendo o DataFrame
+st.subheader("Gols e assistências")
+st.dataframe(df_metricas_ucl)
+st.subheader("Eficiência")
 st.pyplot(ucl)
+st.write("A métrica participação em gols é basicamente Gols + Assistências.")
 st.write("Apesar de estarmos tratando de um atacante e um meio campista, o natural seria que o atacante tivesse mais gols, e é realmente o que acontece. Porém, vemos que o vinícius júnior leve pouquissimo tempo para marcar um gol ou ajudar com um assitência, se comparado ao Rodri.")
 st.write("Quando falamos de futebol, é errado dizer que só contribui para o gol quem fez o gol ou deu assistência, porém como não temos dados além disso, como passes que criram uma oportunidade de gol ou algo nesse sentido, podemos dizer que o vinícius júnior foi muito mais efetivo do que o Rodri, tanto que o Real Madrid ganhou a edição da UCL 23-24.")
+
+st.title("Análise nas respectivas ligas dos paises do seu clube")
+st.subheader("La Liga")
+
+
