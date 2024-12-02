@@ -180,12 +180,71 @@ ax.legend(title='Métrica')
 st.subheader("Gols e assistências")
 st.dataframe(df_metricas_ucl)
 st.subheader("Eficiência")
+st.write("Quanto menor, melhor!")
 st.pyplot(ucl)
 st.write("A métrica participação em gols é basicamente Gols + Assistências.")
 st.write("Apesar de estarmos tratando de um atacante e um meio campista, o natural seria que o atacante tivesse mais gols, e é realmente o que acontece. Porém, vemos que o vinícius júnior leve pouquissimo tempo para marcar um gol ou ajudar com um assitência, se comparado ao Rodri.")
 st.write("Quando falamos de futebol, é errado dizer que só contribui para o gol quem fez o gol ou deu assistência, porém como não temos dados além disso, como passes que criram uma oportunidade de gol ou algo nesse sentido, podemos dizer que o vinícius júnior foi muito mais efetivo do que o Rodri, tanto que o Real Madrid ganhou a edição da UCL 23-24.")
 
 st.title("Análise nas respectivas ligas dos paises do seu clube")
-st.subheader("La Liga")
+st.subheader("Vinícius Júnior - La Liga")
+st.write("Quanto menor, melhor!")
+# Encontra o ID da competição da UEFA Champions League
+premier_linha = competitions_df.competition_code.apply(lambda name: name == 'premier-league')
+premier_id = competitions_df[premier_linha]['competition_id'].values[0]
+
+# Encontra o ID da competição da UEFA Champions League
+laliga_linha = competitions_df.competition_code.apply(lambda name: name == 'laliga')
+laliga_id = competitions_df[laliga_linha]['competition_id'].values[0]
+
+# Filtra as aparições de cada jogador na Champions League
+appearances_vini_ES1 = appearances_df[(appearances_df["player_id"] == id_vinicius) &
+                                (appearances_df["date"] >= start_date) &
+                                (appearances_df["date"] <= end_date) &
+                                (appearances_df["competition_id"] == laliga_id)]
+
+appearances_rodri_GB1 = appearances_df[(appearances_df["player_id"] == id_rodri) &
+                                (appearances_df["date"] >= start_date) &
+                                (appearances_df["date"] <= end_date) &
+                                (appearances_df["competition_id"] == premier_id)]
+
+# Calcula as métricas de cada jogador na Champions League
+minutos_vini_ES1 = appearances_vini_ES1['minutes_played'].sum()
+minutos_rodri_GB1 = appearances_rodri_GB1['minutes_played'].sum()
+gols_vini_ES1 = appearances_vini_ES1['goals'].sum()
+gols_rodri_GB1 = appearances_rodri_GB1['goals'].sum()
+assists_vini_ES1 = appearances_vini_ES1['assists'].sum()
+assists_rodri_GB1 = appearances_rodri_GB1['assists'].sum()
+
+# Soma os gols e assistências para participação em gols
+participacao_gol_rodri_GB1 = gols_rodri_GB1 + assists_rodri_GB1
+participacao_gol_vini_ES1 = gols_vini_ES1 + assists_vini_ES1
+
+# Calcula minutos por gol e por participação em gol
+minutos_para_marcar_vini_ES1 = minutos_vini_ES1 / gols_vini_ES1
+minutos_para_marcar_rodri_GB1 = minutos_rodri_GB1 / gols_rodri_GB1
+minutos_para_participar_gol_vini_ES1 = minutos_vini_ES1 / participacao_gol_vini_ES1
+minutos_para_participar_gol_rodri_GB1 = minutos_rodri_GB1 / participacao_gol_rodri_GB1
+
+# Cria um DataFrame para as métricas de eficiência
+df_eficiencia_ES1_GB1 = pd.DataFrame({
+    'Jogador': ['Vinicius Junior', 'Rodri'],
+    'Minutos por Gol': [minutos_para_marcar_vini_ES1, minutos_para_marcar_rodri_GB1],
+    'Minutos por Participação em Gol': [minutos_para_participar_gol_vini_ES1, minutos_para_participar_gol_rodri_GB1]
+}).melt(id_vars='Jogador', var_name='Métrica', value_name='Minutos')
 
 
+# Cria o gráfico de eficiência
+league, ax = plt.subplots(figsize=(10, 6))
+sns.barplot(data=df_eficiencia_ES1_GB1, x='Jogador', y='Minutos', hue='Métrica')
+ax.set_title('Eficiência de Vinicius Jr. e Rodri (Gols e Participações) na La liga e Premier League')
+ax.set_ylabel('Minutos')
+ax.set_xlabel('Jogador')
+ax.legend(title='Métrica')
+st.pyplot(league)
+
+st.write("Aqui o cenário se repete mais uma vez, vinícius júnior sendo muito mais impactante nos resultados do Real Madrid, do que o Rodri no Manchester City.")
+
+st.title("Considerações Finais")
+st.write("É importante mencionar que não se sabe quais os critérios para analisar qual será o melhor jogador do mundo, existe uma banca de jornalista e pessoas influentes e cada um vota de acordo com seus critérios.")
+st.write("Porém, quando avaliamos no ambito futibolistico, é evidente que o vinicíus júnior foi superior que o Rodri na temporada 23-24.")
