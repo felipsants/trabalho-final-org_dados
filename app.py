@@ -99,7 +99,7 @@ rodri_counts = linhas_rodri["count"]
 x = range(len(vini_counts))  # Base para o eixo x
 width = 0.4
 
-fig, ax = plt.subplots(figsize=(10, 6))
+temp_23_24, ax = plt.subplots(figsize=(10, 6))
 ax.bar([pos - width/2 for pos in x], vini_counts, width=width, label="Vinicius Junior", color="blue")
 ax.bar([pos + width/2 for pos in x], rodri_counts, width=width, label="Rodri", color="green")
 
@@ -112,6 +112,9 @@ ax.legend()
 plt.tight_layout()
 
 st.title("Bola de Ouro 23-24. Vinicius Júnior ou Rodri?")
+st.write("Aqui iremos tentar mostrar, com as estatísticas, que o Vinicíus Júnior mereceu a bola de ouro, no lugar do Rodri.")
 
-st.subheader("Gráfico de Comparação: Vinicius Junior vs Rodri")
-st.pyplot(fig)
+st.subheader("Gráfico de Comparação: Vinicius Junior vs Rodri, na temporada 23-24")
+st.pyplot(temp_23_24)
+st.write("Aqui vemos que o Vinícius foi superior em Gols e Rodri foi superior nas assistências.")
+st.write("Vinícius Júnior foi mais substituido do que o Rodri, o que pode nos dizer que talvez o vinícius seja mais irregular durante as partidas, do que o Rodri. Porém, pode ter outros significados, o Real Madrid tem um plantel ofensivo muito forte, logo uma substituição pode não estar diretamente relacionada à má desempenho.")
