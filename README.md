@@ -9,15 +9,15 @@ O objetivo deste trabalho é realizar um EDA (Análise exploratória de Dados) d
 ```bash
 git clone https://github.com/felipsants/trabalho-final-org_dados.git
 ```
-### 2º Passo: Rodar o comando do streamlit
+### 2º Passo: Instalar as dependências
+```bash
+pip install matplotlib==3.9.2 seaborn==0.13.2 pandas==2.2.2 streamlit==1.40.2
+```
+### 3º Passo: Rodar o comando do streamlit
 ```bash
 streamlit run app.py
 ```
 
 ## Como executar o EDA
-### 1º Passo: Instalar as dependências
-```bash
-pip install matplotlib==3.9.2 seaborn==0.13.2 pandas==2.2.2
-```
-### 2º Passo: Executar o EDA.ipynb
+### 1º Passo: Executar o EDA.ipynb
 <br>
